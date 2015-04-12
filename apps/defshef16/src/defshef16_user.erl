@@ -24,6 +24,15 @@
 ]).
 
 %%====================================================================
+%% State record
+%%====================================================================
+
+-record(state, {
+    first_name,
+    last_name
+}).
+
+%%====================================================================
 %% API functions
 %%====================================================================
 
@@ -41,10 +50,10 @@ first_name_starts_with(Pid, Letter) ->
 %%====================================================================
 
 start_link(FirstName, LastName) when is_list(FirstName), is_list(LastName) ->
-    State = dict:from_list([
-        {first_name, FirstName},
-        {last_name, LastName}
-    ]),
+    State = #state{
+        first_name=FirstName,
+        last_name=LastName
+    },
     gen_server:start_link(?MODULE, [State], []).
 
 %%====================================================================
@@ -57,24 +66,29 @@ init([State]) ->
 terminate(_Reason, _State) ->
     ok.
 
-code_change(_OldVsn, State, _Extra) ->
-    {ok, State}.
+code_change({down, _DownVsn}, #state{first_name=FirstName, last_name=LastName}, _Extra) ->
+    {ok, dict:from_list([
+        {first_name, FirstName},
+        {last_name, LastName}
+    ])};
+
+code_change(_OldVsn, Dict, _Extra) ->
+    {ok, FirstName} = dict:find(first_name, Dict),
+    {ok, LastName} = dict:find(last_name, Dict),
+    {ok, #state{first_name=FirstName, last_name=LastName}}.
 
 %%====================================================================
 %% call
 %%====================================================================
 
 handle_call(get_full_name, _From, State) ->
-    {ok, FirstName} = dict:find(first_name, State),
-    {ok, LastName} = dict:find(last_name, State),
     FullName = lists:flatten(io_lib:format("~s ~s", [
-        FirstName,
-        LastName
+        State#state.first_name,
+        State#state.last_name
     ])),
     {reply, FullName, State};
 
-handle_call({first_name_starts_with, Prefix}, _From, State) ->
-    {ok, FirstName} = dict:find(first_name, State),
+handle_call({first_name_starts_with, Prefix}, _From, State = #state{first_name=FirstName}) ->
     StartsWith = lists:prefix(string:to_lower(Prefix), string:to_lower(FirstName)),
     {reply, StartsWith, State}.
 
@@ -83,13 +97,10 @@ handle_call({first_name_starts_with, Prefix}, _From, State) ->
 %%====================================================================
 
 handle_cast({set_name, FirstName, LastName}, State) ->
-    NewState = lists:foldl(fun({Key, Value}, Dict) ->
-        dict:store(Key, Value, Dict)
-    end, State, [
-        {first_name, FirstName},
-        {last_name, LastName}
-    ]),
-    {noreply, NewState}.
+    {noreply, State#state{
+        first_name=FirstName,
+        last_name=LastName
+    }}.
 
 %%====================================================================
 %% info

@@ -1,6 +1,6 @@
 {application, defshef16,
  [{description, "An OTP application"}
- ,{vsn, "2"}
+ ,{vsn, "3"}
  ,{registered, []}
  ,{mod, {'defshef16_app', []}}
  ,{applications,
