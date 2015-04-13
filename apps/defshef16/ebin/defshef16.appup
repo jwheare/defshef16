@@ -1,0 +1,17 @@
+{"2",
+    % upgrade
+    [{"1", [
+        {add_module, defshef16_user},
+        {add_module, defshef16_user_sup},
+        {update, defshef16_sup, supervisor},
+        {apply, {supervisor, restart_child, [defshef16_sup, defshef16_user_sup]}}
+    ]}],
+    % downgrade
+    [{"1", [
+        {apply, {supervisor, terminate_child, [defshef16_sup, defshef16_user_sup]}},
+        {apply, {supervisor, delete_child, [defshef16_sup, defshef16_user_sup]}},
+        {update, defshef16_sup, supervisor},
+        {delete_module, defshef16_user_sup},
+        {delete_module, defshef16_user}
+    ]}]
+}.

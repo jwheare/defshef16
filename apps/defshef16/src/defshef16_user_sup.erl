@@ -1,16 +1,16 @@
 %%%-------------------------------------------------------------------
-%% @doc defshef16 top level supervisor.
+%% @doc defshef16 user supervisor.
 %% @end
 %%%-------------------------------------------------------------------
 
--module(defshef16_sup).
+-module(defshef16_user_sup).
 
 -behaviour(supervisor).
 
 %% Public API
--export([children/0]).
+-export([start_user/2]).
 
-%% Application API
+%% Supervisor API
 -export([start_link/0]).
 
 %% Supervisor callbacks
@@ -19,14 +19,14 @@
 -define(SERVER, ?MODULE).
 
 %%====================================================================
-%% Public api
+%% Public API
 %%====================================================================
 
-children() ->
-    supervisor:which_children(?SERVER).
+start_user(FirstName, LastName) ->
+    supervisor:start_child(?SERVER, [FirstName, LastName]).
 
 %%====================================================================
-%% Application api
+%% Supervisor API
 %%====================================================================
 
 start_link() ->
@@ -40,19 +40,16 @@ start_link() ->
 init([]) ->
     ChildSpecs = [
         {
-            Child, % Supervision id
-            {Child, start_link, []}, % Start: Module, function, args
+            defshef16_user, % Supervision id
+            {defshef16_user, start_link, []}, % Start: Module, function, args
             permanent, % restart mode (permanent | transient | temporary)
             5000, % shutdown timeout (timeout | brutal_kill)
-            Type, % child type (worker | supervisor)
-            [Child] % modules [for code reloading during a release upgrade]
-        } || {Child, Type} <- [
-            {defshef16_int_server, worker},
-            {defshef16_user_sup, supervisor}
-        ]
+            worker, % child type (worker | supervisor)
+            [defshef16_user] % modules [for code reloading during a release upgrade]
+        }
     ],
     {ok, {{
-        one_for_one, % restart strategy
+        simple_one_for_one, % restart strategy
         % one_for_one [processes are isolated]
         % one_for_all [if one process crashes, they're all restarted]
         % rest_for_one [if one process crashes, every *subsequent* process is restarted]
