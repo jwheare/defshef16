@@ -8,8 +8,8 @@ A demo OTP application
 
 Requirements: https://rebar3.org
 
-Build step 1
-------------
+# Part 1: A simple gen_server, to store an integer
+
     $ git reset --hard 1
     $ rebar3 release
     $ _build/default/rel/defshef16/bin/defshef16 start
@@ -25,8 +25,8 @@ Build step 1
     
 Try setting a non integer, then increment it to make the process crash. Then fix it with a [guard sequence](http://erlang.org/doc/reference_manual/expressions.html#id81912) and `when`
 
-Build step 2
-------------
+# Part 2: Upgrading the supervision tree, adding user processes
+
     $ git reset --hard 2
     $ rebar3 release relup tar
     $ mv _build/default/rel/defshef16/defshef16-2.tar.gz _build/default/rel/defshef16/releases/2/defshef16.tar.gz
@@ -38,8 +38,8 @@ Build step 2
     9> rr(dict).
     10> sys:get_state(Pid).
 
-Build step 3
-------------
+# Part 3: Upgrading user state to use a record instead of a dict
+
     $ git reset --hard 3
     $ rebar3 release relup tar
     $ mv _build/default/rel/defshef16/defshef16-3.tar.gz _build/default/rel/defshef16/releases/3/defshef16.tar.gz
