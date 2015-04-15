@@ -6,7 +6,9 @@ https://github.com/jwheare/defshef16/tree/master/talk/defshef16-notes.pdf
 
 A demo OTP application
 
-Requirements: https://rebar3.org
+Requirements:
+- Erlang (I used 17, but older versions probably work too)
+- Rebar 3: https://rebar3.org
 
 # Part 1
 A simple gen_server, storing an integer  
