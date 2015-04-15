@@ -9,7 +9,8 @@ A demo OTP application
 Requirements: https://rebar3.org
 
 # Part 1
-A simple gen_server, storing an integer [src](https://github.com/jwheare/defshef16/tree/master/apps/defshef16/src)
+A simple gen_server, storing an integer  
+Source: https://github.com/jwheare/defshef16/tree/master/apps/defshef16/src
 
     $ git reset --hard 1
     $ rebar3 release
@@ -27,7 +28,8 @@ A simple gen_server, storing an integer [src](https://github.com/jwheare/defshef
 Try setting a non integer, then increment it to make the process crash. Then fix it with a [guard sequence](http://erlang.org/doc/reference_manual/expressions.html#id81912) and `when`
 
 # Part 2
-Upgrading the supervision tree, adding user processes [diff](https://github.com/jwheare/defshef16/compare/1...2)
+Upgrading the supervision tree, adding user processes  
+Diff: https://github.com/jwheare/defshef16/compare/1...2
 
     $ git reset --hard 2
     $ rebar3 release relup tar
@@ -41,7 +43,8 @@ Upgrading the supervision tree, adding user processes [diff](https://github.com/
     10> sys:get_state(Pid).
 
 # Part 3
-Upgrading user state to use a record instead of a dict [diff](https://github.com/jwheare/defshef16/compare/2...3)
+Upgrading user state to use a record instead of a dict  
+Diff: https://github.com/jwheare/defshef16/compare/2...3
 
     $ git reset --hard 3
     $ rebar3 release relup tar
